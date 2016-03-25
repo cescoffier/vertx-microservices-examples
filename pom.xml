@@ -73,14 +73,6 @@
   <profiles>
     <profile>
       <id>openshift</id>
-      <dependencies>
-        <dependency>
-          <groupId>com.noctarius.discovery</groupId>
-          <artifactId>hazelcast-kubernetes-discovery</artifactId>
-          <version>0.9.2</version>
-        </dependency>
-      </dependencies>
-
       <properties>
         <docker.group.name>vertx-microservices-example</docker.group.name>
         <docker.image>${docker.group.name}/${project.artifactId}:${project.version}</docker.image>

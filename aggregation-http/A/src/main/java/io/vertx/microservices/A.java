@@ -34,8 +34,6 @@ public class A extends AbstractVerticle {
     circuitC = CircuitBreaker.create("C", vertx, options);
     circuitD = CircuitBreaker.create("D", vertx, options);
 
-
-    DiscoveryRestEndpoint.create(router, discovery);
     router.route("/assets/*").handler(StaticHandler.create("assets"));
     router.get("/A").handler(this::hello);
 

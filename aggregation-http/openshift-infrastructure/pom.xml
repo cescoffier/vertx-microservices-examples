@@ -63,9 +63,10 @@
     <profile>
       <id>openshift</id>
       <properties>
-        <fabric8.service.vertx-eventbus.headless>true</fabric8.service.vertx-eventbus.headless>
-        <fabric8.service.vertx-eventbus.port>5701</fabric8.service.vertx-eventbus.port>
-        <fabric8.service.vertx-eventbus.containerPort>5701</fabric8.service.vertx-eventbus.containerPort>
+        <fabric8.service.infra.name>infrastructure</fabric8.service.infra.name>
+        <fabric8.service.infra.port>80</fabric8.service.infra.port>
+        <fabric8.service.infra.containerPort>8080</fabric8.service.infra.containerPort>
+        <fabric8.service.infra.type>LoadBalancer</fabric8.service.infra.type>
       </properties>
     </profile>
   </profiles>
