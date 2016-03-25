@@ -1,3 +1,4 @@
 {
-  "namespace" : "vertx-microservice-example-aggregation-http"
+  "namespace" : "vertx-microservice-example-aggregation-http",
+  "port" : 8080
 }
