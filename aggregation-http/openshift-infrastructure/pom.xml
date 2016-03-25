@@ -4,95 +4,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>io.vertx.microservices</groupId>
+    <artifactId>aggregation-http</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
-  <groupId>io.vertx.microservices</groupId>
   <artifactId>aggregation-http-openshift</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <vertx.version>3.3.0-SNAPSHOT</vertx.version>
     <main.verticle>io.vertx.microservices.OpenshiftVerticle</main.verticle>
   </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-dependencies</artifactId>
-        <version>${vertx.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-circuit-breaker</artifactId>
-      <version>${vertx.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-discovery-service</artifactId>
-      <version>${vertx.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
       <artifactId>vertx-discovery-bridge-kubernates</artifactId>
-      <version>3.3.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-hazelcast</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.noctarius.discovery</groupId>
-      <artifactId>hazelcast-kubernetes-discovery</artifactId>
-      <version>0.9.2</version>
+      <version>${vertx.version}</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.7</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/env</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/env</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -125,14 +59,15 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>oss.snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
+  <profiles>
+    <profile>
+      <id>openshift</id>
+      <properties>
+        <fabric8.service.vertx-eventbus.headless>true</fabric8.service.vertx-eventbus.headless>
+        <fabric8.service.vertx-eventbus.port>5701</fabric8.service.vertx-eventbus.port>
+        <fabric8.service.vertx-eventbus.containerPort>5701</fabric8.service.vertx-eventbus.containerPort>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>

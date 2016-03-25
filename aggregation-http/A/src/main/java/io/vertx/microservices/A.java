@@ -9,7 +9,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.circuitbreaker.CircuitBreaker;
 import io.vertx.ext.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.rest.DiscoveryRestEndpoint;
 import io.vertx.ext.discovery.types.HttpEndpoint;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -37,7 +36,6 @@ public class A extends AbstractVerticle {
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
     router.get("/A").handler(this::hello);
-    DiscoveryRestEndpoint.create(router, discovery);
 
     vertx.createHttpServer()
         .requestHandler(router::accept)

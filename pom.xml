@@ -55,11 +55,6 @@
       <artifactId>vertx-hazelcast</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>com.noctarius.discovery</groupId>
-      <artifactId>hazelcast-kubernetes-discovery</artifactId>
-      <version>0.9.2</version>
-    </dependency>
   </dependencies>
 
   <build>
@@ -72,29 +67,93 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.7</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/env</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>src/env</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>openshift</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.noctarius.discovery</groupId>
+          <artifactId>hazelcast-kubernetes-discovery</artifactId>
+          <version>0.9.2</version>
+        </dependency>
+      </dependencies>
+
+      <properties>
+        <docker.group.name>vertx-microservices-example</docker.group.name>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <version>0.14.2</version>
+            <configuration>
+              <images>
+                <image>
+                  <name>${docker.group.name}/${project.artifactId}:${project.version}</name>
+                  <build>
+                    <from>java:8</from>
+                    <tags>
+                      <tag>latest</tag>
+                      <tag>${project.version}</tag>
+                    </tags>
+                    <ports>
+                      <port>8080</port>
+                      <port>5701</port>
+                    </ports>
+                    <workdir>/opt</workdir>
+                    <entryPoint>
+                      <exec>
+                        <arg>java</arg>
+                        <arg>-jar</arg>
+                        <arg>${project.artifactId}-${project.version}-fat.jar</arg>
+                        <arg>-cluster</arg>
+                        <arg>-conf</arg>
+                        <arg>config.json</arg>
+                        <arg>-cp</arg>
+                        <arg>.</arg>
+                      </exec>
+                    </entryPoint>
+                    <assembly>
+                      <basedir>/</basedir>
+                      <inline>
+                        <files>
+                          <file>
+                            <source>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</source>
+                            <outputDirectory>/opt</outputDirectory>
+                          </file>
+                        </files>
+                        <fileSets>
+                          <fileSet>
+                            <directory>${project.basedir}/src/openshift/</directory>
+                            <outputDirectory>/opt</outputDirectory>
+                          </fileSet>
+                        </fileSets>
+                      </inline>
+                    </assembly>
+                  </build>
+                  <run>
+                    <ports>
+                      <port>http.port:8080</port>
+                      <port>eventbus.port:5701</port>
+                    </ports>
+                  </run>
+                </image>
+              </images>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <version>2.2.96</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <repositories>
     <repository>

@@ -19,7 +19,7 @@
       "kind": "BuildConfig",
       "apiVersion": "v1",
       "metadata": {
-        "name": "a"
+        "name": "vertx-infra"
       },
       "spec": {
         "triggers": [
@@ -32,7 +32,8 @@
           "type": "Git",
           "git": {
             "uri": "https://github.com/cescoffier/vertx-microservices-examples.git"
-          }
+          },
+          "contextDir": "aggregation-http/openshift-infrastructure"
         },
         "strategy": {
           "type": "Source",
@@ -46,7 +47,7 @@
         "output": {
           "to": {
             "kind": "ImageStreamTag",
-            "name": "a:latest"
+            "name": "vertx-infra:latest"
           }
         },
         "resources": {}
@@ -56,7 +57,7 @@
       "kind": "ImageStream",
       "apiVersion": "v1",
       "metadata": {
-        "name": "a"
+        "name": "vertx-infra"
       },
       "spec": {
         "dockerImageRepository": "",
@@ -71,7 +72,7 @@
       "kind": "DeploymentConfig",
       "apiVersion": "v1",
       "metadata": {
-        "name": "a"
+        "name": "vertx-infra"
       },
       "spec": {
         "strategy": {
@@ -92,30 +93,30 @@
             "imageChangeParams": {
               "automatic": true,
               "containerNames": [
-                "a"
+                "vertx-infra"
               ],
               "from": {
                 "kind": "ImageStreamTag",
-                "name": "a:latest"
+                "name": "vertx-infra:latest"
               }
             }
           }
         ],
         "replicas": 1,
         "selector": {
-          "deploymentconfig": "a"
+          "deploymentconfig": "vertx-infra"
         },
         "template": {
           "metadata": {
             "labels": {
-              "deploymentconfig": "a"
+              "deploymentconfig": "vertx-infra"
             }
           },
           "spec": {
             "containers": [
               {
-                "name": "a",
-                "image": "a",
+                "name": "vertx-infra",
+                "image": "vertx-infra",
                 "ports": [
                   {
                     "containerPort": 8080,
@@ -152,12 +153,12 @@
       "kind": "Route",
       "apiVersion": "v1",
       "metadata": {
-        "name": "a"
+        "name": "vertx-infra"
       },
       "spec": {
         "to": {
           "kind": "Service",
-          "name": "a"
+          "name": "vertx-infra"
         }
       }
     },
@@ -165,7 +166,7 @@
       "kind": "Service",
       "apiVersion": "v1",
       "metadata": {
-        "name": "a"
+        "name": "vertx-infra"
       },
       "spec": {
         "ports": [
@@ -176,7 +177,7 @@
           }
         ],
         "selector": {
-          "deploymentconfig": "a"
+          "deploymentconfig": "vertx-infra"
         },
         "type": "ClusterIP",
         "sessionAffinity": "None"
@@ -199,7 +200,7 @@
           "targetPort" : 5701
         } ],
         "selector": {
-          "deploymentconfig": "a"
+          "deploymentconfig": "vertx-infra"
         }
       }
     }

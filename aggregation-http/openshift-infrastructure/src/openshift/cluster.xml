@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.2.xsd"
+<hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.6.xsd"
            xmlns="http://www.hazelcast.com/schema/config"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <properties>
@@ -8,24 +8,38 @@
     <property name="hazelcast.rest.enabled">false</property>
     <property name="hazelcast.wait.seconds.before.join">0</property>
     <property name="hazelcast.logging.type">jdk</property>
+
+    <!-- at the moment the discovery needs to be activated explicitly -->
+    <property name="hazelcast.discovery.enabled">true</property>
+
   </properties>
 
   <network>
     <port auto-increment="true" port-count="10000">5701</port>
     <outbound-ports>
+      <!--
+      Allowed port range when connecting to other nodes.
+      0 or * means use system provided port.
+      -->
       <ports>0</ports>
     </outbound-ports>
     <join>
-      <multicast enabled="true">
-        <multicast-group>224.2.2.3</multicast-group>
-        <multicast-port>54327</multicast-port>
-      </multicast>
-      <tcp-ip enabled="false">
-        <interface>192.168.1.*</interface>
-      </tcp-ip>
+      <multicast enabled="false"/>
+
+      <tcp-ip enabled="false"/>
+      <discovery-strategies>
+        <discovery-strategy enabled="true"
+                                class="com.noctarius.hazelcast.kubernetes.HazelcastKubernetesDiscoveryStrategy">
+          <properties>
+            <!-- configure discovery headless service  lookup -->
+            <property name="service-dns">vertx-eventbus.vertx-microservice-example-aggregation-http.svc.cluster.local</property>
+          </properties>
+        </discovery-strategy>
+      </discovery-strategies>
     </join>
-    <interfaces enabled="true">
-      <interface> 192.168.99.1</interface>
+
+    <interfaces enabled="false">
+      <interface>10.10.1.*</interface>
     </interfaces>
     <ssl enabled="false"/>
     <socket-interceptor enabled="false"/>
@@ -53,7 +67,7 @@
     <!--Queue capacity. 0 means Integer.MAX_VALUE.-->
     <queue-capacity>0</queue-capacity>
   </executor-service>
-  <map name="subs">
+  <map name="__vertx.subs">
 
     <!--
         Number of backups. If 1 is set as the backup-count for example,
