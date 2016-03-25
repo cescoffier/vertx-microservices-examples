@@ -84,6 +84,7 @@
       <properties>
         <docker.group.name>vertx-microservices-example</docker.group.name>
         <docker.image>${docker.group.name}/${project.artifactId}:${project.version}</docker.image>
+        <fabric8.dockerUser>fabric8/</fabric8.dockerUser>
       </properties>
       <build>
         <plugins>
@@ -105,6 +106,7 @@
                       <port>8080</port>
                       <port>5701</port>
                     </ports>
+                    <user>root</user>
                     <workdir>/opt</workdir>
                     <entryPoint>
                       <exec>
