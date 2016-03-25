@@ -83,7 +83,7 @@
 
       <properties>
         <docker.group.name>vertx-microservices-example</docker.group.name>
-        <docker.image>${docker.group.name}/${project.artifactId}</docker.image>
+        <docker.image>${docker.group.name}/${project.artifactId}:${project.version}</docker.image>
       </properties>
       <build>
         <plugins>
