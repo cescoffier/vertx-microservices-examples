@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>pipeline-http-C</artifactId>
+  <artifactId>pipeline-http-c</artifactId>
 
   <properties>
     <main.verticle>io.vertx.microservices.C</main.verticle>

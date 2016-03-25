@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>pipeline-http-D</artifactId>
+  <artifactId>pipeline-http-d</artifactId>
 
   <properties>
     <main.verticle>io.vertx.microservices.D</main.verticle>

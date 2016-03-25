@@ -10,11 +10,19 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>pipeline-http-A</artifactId>
+  <artifactId>pipeline-http-a</artifactId>
 
   <properties>
     <main.verticle>io.vertx.microservices.A</main.verticle>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-discovery-bridge-kubernetes</artifactId>
+      <version>${vertx.version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
