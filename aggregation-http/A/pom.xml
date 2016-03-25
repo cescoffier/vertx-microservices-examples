@@ -63,10 +63,6 @@
         <fabric8.service.a.port>80</fabric8.service.a.port>
         <fabric8.service.a.containerPort>8080</fabric8.service.a.containerPort>
         <fabric8.service.a.type>LoadBalancer</fabric8.service.a.type>
-
-        <fabric8.service.vertx-eventbus.headless>true</fabric8.service.vertx-eventbus.headless>
-        <fabric8.service.vertx-eventbus.port>5701</fabric8.service.vertx-eventbus.port>
-        <fabric8.service.vertx-eventbus.containerPort>5701</fabric8.service.vertx-eventbus.containerPort>
       </properties>
     </profile>
   </profiles>
