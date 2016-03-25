@@ -2,7 +2,7 @@ package io.vertx.microservices;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.bridge.kubernates.KubernatesBridge;
+import io.vertx.ext.discovery.kubernetes.KubernetesDiscoveryBridge;
 
 public class OpenshiftVerticle extends AbstractVerticle {
 
@@ -10,7 +10,7 @@ public class OpenshiftVerticle extends AbstractVerticle {
 
   @Override
   public void start() throws Exception {
-    discovery = DiscoveryService.create(vertx).registerDiscoveryBridge(new KubernatesBridge(), config());
+    discovery = DiscoveryService.create(vertx).registerDiscoveryBridge(new KubernetesDiscoveryBridge(), config());
   }
 
   @Override

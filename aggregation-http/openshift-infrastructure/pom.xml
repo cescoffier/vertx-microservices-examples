@@ -20,7 +20,7 @@
   <dependencies>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-discovery-bridge-kubernates</artifactId>
+      <artifactId>vertx-discovery-bridge-kubernetes</artifactId>
       <version>${vertx.version}</version>
     </dependency>
   </dependencies>
