@@ -30,9 +30,24 @@ public class A extends AbstractVerticle {
         .setTimeoutInMs(2000)
         .setResetTimeoutInMs(5000)
         .setFallbackOnFailure(true);
-    circuitB = CircuitBreaker.create("B", vertx, options);
-    circuitC = CircuitBreaker.create("C", vertx, options);
-    circuitD = CircuitBreaker.create("D", vertx, options);
+    circuitB = CircuitBreaker.create("B", vertx, options).openHandler(v -> {
+      if (clientB != null) {
+        clientB.close();
+        clientB = null;
+      }
+    });
+    circuitC = CircuitBreaker.create("C", vertx, options).openHandler(v -> {
+      if (clientC != null) {
+        clientC.close();
+        clientC = null;
+      }
+    });;
+    circuitD = CircuitBreaker.create("D", vertx, options).openHandler(v -> {
+      if (clientD != null) {
+        clientD.close();
+        clientD = null;
+      }
+    });;
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
     router.get("/A").handler(this::hello);
