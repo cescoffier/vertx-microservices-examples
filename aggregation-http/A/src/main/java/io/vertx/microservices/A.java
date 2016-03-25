@@ -27,7 +27,7 @@ public class A extends AbstractVerticle {
     discovery = DiscoveryService.create(vertx);
     CircuitBreakerOptions options = new CircuitBreakerOptions()
         .setMaxFailures(2)
-        .setTimeoutInMs(5000)
+        .setTimeoutInMs(2000)
         .setResetTimeoutInMs(5000)
         .setFallbackOnFailure(true);
     circuitB = CircuitBreaker.create("B", vertx, options);
