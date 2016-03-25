@@ -57,4 +57,17 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>openshift</id>
+      <properties>
+        <fabric8.service.a.name>a</fabric8.service.a.name>
+        <fabric8.service.a.port>80</fabric8.service.a.port>
+        <fabric8.service.a.containerPort>8080</fabric8.service.a.containerPort>
+        <fabric8.service.a.type>LoadBalancer</fabric8.service.a.type>
+        <fabric8.label.service-type>http-endpoint</fabric8.label.service-type>
+      </properties>
+    </profile>
+  </profiles>
 </project>
