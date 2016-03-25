@@ -83,6 +83,7 @@
 
       <properties>
         <docker.group.name>vertx-microservices-example</docker.group.name>
+        <docker.image>${docker.group.name}/${project.artifactId}</docker.image>
       </properties>
       <build>
         <plugins>
@@ -93,7 +94,7 @@
             <configuration>
               <images>
                 <image>
-                  <name>${docker.group.name}/${project.artifactId}:${project.version}</name>
+                  <name>${docker.image}</name>
                   <build>
                     <from>java:8</from>
                     <tags>
