@@ -34,7 +34,13 @@ public class A extends AbstractVerticle {
             .setMaxFailures(1)
             .setTimeoutInMs(3000)
             .setResetTimeoutInMs(5000)
-            .setFallbackOnFailure(true));
+            .setFallbackOnFailure(true))
+        .openHandler(v -> {
+          if (client != null) {
+            client.close();
+            client = null;
+          }
+        });
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
     router.get("/A").handler(this::hello);
@@ -56,12 +62,12 @@ public class A extends AbstractVerticle {
     } else {
       circuit.executeAsynchronousCodeWithFallback(
           future ->
-            client.get("/?name=" + param, response -> {
-              response.bodyHandler(buffer -> buildResponse(context, param, buffer));
-              future.complete();
-            })
-                .exceptionHandler(future::fail)
-                .end()
+              client.get("/?name=" + param, response -> {
+                response.bodyHandler(buffer -> buildResponse(context, param, buffer));
+                future.complete();
+              })
+                  .exceptionHandler(future::fail)
+                  .end()
           ,
           v -> fallback(context, param)
       );

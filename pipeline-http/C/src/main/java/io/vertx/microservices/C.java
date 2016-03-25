@@ -33,7 +33,13 @@ public class C extends AbstractVerticle {
             .setMaxFailures(1)
             .setTimeoutInMs(3000)
             .setResetTimeoutInMs(5000)
-            .setFallbackOnFailure(true));
+            .setFallbackOnFailure(true))
+        .openHandler(v -> {
+          if (client != null) {
+            client.close();
+            client = null;
+          }
+        });
 
     router.get("/").handler(this::hello);
 
