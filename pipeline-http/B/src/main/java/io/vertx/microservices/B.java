@@ -88,7 +88,12 @@ public class B extends AbstractVerticle {
     if (client != null) {
       resultHandler.handle(client);
     } else {
+      LOGGER.info("Looking for service C");
       HttpEndpoint.get(vertx, discovery, new JsonObject().put("name", "C"), ar -> {
+        LOGGER.info("Service lookup -> success: " + ar.succeeded());
+        if (ar.failed()) {
+          LOGGER.info("Service lookup failure", ar.cause());
+        }
         client = ar.result();
         resultHandler.handle(client);
       });
