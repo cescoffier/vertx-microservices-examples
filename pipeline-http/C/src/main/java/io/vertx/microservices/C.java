@@ -34,7 +34,7 @@ public class C extends AbstractVerticle {
             .setTimeoutInMs(3000)
             .setResetTimeoutInMs(5000)
             .setFallbackOnFailure(true))
-        .openHandler(v -> {
+        .halfOpenHandler(v -> {
           if (client != null) {
             client.close();
             client = null;
