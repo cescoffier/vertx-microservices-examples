@@ -19,7 +19,6 @@
     <module>B</module>
     <module>C</module>
     <module>D</module>
-    <module>openshift-infrastructure</module>
   </modules>
 
 </project>
