@@ -13,7 +13,7 @@
   <artifactId>pipeline-http-c</artifactId>
 
   <properties>
-    <main.verticle>io.vertx.microservices.C</main.verticle>
+    <main.verticle>io.vertx.microservices.MainVerticle</main.verticle>
   </properties>
 
   <build>

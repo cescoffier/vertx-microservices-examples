@@ -26,10 +26,6 @@ public class A extends AbstractVerticle {
     Router router = Router.router(vertx);
     discovery = DiscoveryService.create(vertx);
 
-    if (config().getBoolean("openshift", false)) {
-      discovery.registerDiscoveryBridge(new KubernetesDiscoveryBridge(), config());
-    }
-
     circuit = CircuitBreaker.create("A", vertx,
         new CircuitBreakerOptions()
             .setMaxFailures(1)

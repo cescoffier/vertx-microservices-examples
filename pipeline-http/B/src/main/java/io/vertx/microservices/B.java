@@ -11,7 +11,6 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.circuitbreaker.CircuitBreaker;
 import io.vertx.ext.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.Record;
 import io.vertx.ext.discovery.types.HttpEndpoint;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -19,13 +18,12 @@ import io.vertx.ext.web.RoutingContext;
 public class B extends AbstractVerticle {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(B.class);
-  private Record record;
   private DiscoveryService discovery;
   private CircuitBreaker circuit;
   private HttpClient client;
 
   @Override
-  public void start(Future future) throws Exception {
+  public void start() throws Exception {
     Router router = Router.router(vertx);
     discovery = DiscoveryService.create(vertx);
     circuit = CircuitBreaker.create("B", vertx,
@@ -45,18 +43,13 @@ public class B extends AbstractVerticle {
 
     vertx.createHttpServer()
         .requestHandler(router::accept)
-        .listen(config().getInteger("port"), v -> {
-          publishService(future, "B");
-        });
+        .listen(config().getInteger("port"));
   }
 
   @Override
-  public void stop(Future<Void> future) throws Exception {
+  public void stop() throws Exception {
     if (client != null) {
       client.close();
-    }
-    if (record != null) {
-      discovery.unpublish(record.getRegistration(), ar -> future.complete());
     }
   }
 
@@ -88,9 +81,7 @@ public class B extends AbstractVerticle {
     if (client != null) {
       resultHandler.handle(client);
     } else {
-      LOGGER.info("Looking for service C");
       HttpEndpoint.get(vertx, discovery, new JsonObject().put("name", "C"), ar -> {
-        LOGGER.info("Service lookup -> success: " + ar.succeeded());
         if (ar.failed()) {
           LOGGER.info("Service lookup failure", ar.cause());
         }
@@ -112,22 +103,5 @@ public class B extends AbstractVerticle {
         .end(new JsonObject()
             .put("C", "No service available (fallback)")
             .put("B", "Hola " + param).encodePrettily());
-  }
-
-  private void publishService(Future future, String name) {
-    if (config().getBoolean("publish-service", true)) {
-      discovery.publish(HttpEndpoint.createRecord(name, "localhost", config().getInteger("port"), "/"),
-          published -> {
-            if (published.succeeded()) {
-              this.record = published.result();
-              LOGGER.info(name + " has been published");
-              future.complete();
-            } else {
-              future.fail("Cannot publish " + name + ": " + published.cause());
-            }
-          });
-    } else {
-      future.complete();
-    }
   }
 }

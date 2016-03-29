@@ -1,5 +1,4 @@
 {
-  "publish-service" : false,
   "port" : 8080,
   "openshift" : true,
   "namespace" : "vertx-microservice-example-aggregation-http"

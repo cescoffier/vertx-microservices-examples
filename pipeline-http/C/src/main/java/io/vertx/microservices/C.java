@@ -18,14 +18,12 @@ import io.vertx.ext.web.RoutingContext;
 
 public class C extends AbstractVerticle {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(C.class);
-  private Record record;
   private DiscoveryService discovery;
   private CircuitBreaker circuit;
   private HttpClient client;
 
   @Override
-  public void start(Future future) throws Exception {
+  public void start() throws Exception {
     Router router = Router.router(vertx);
     discovery = DiscoveryService.create(vertx);
     circuit = CircuitBreaker.create("C", vertx,
@@ -45,18 +43,13 @@ public class C extends AbstractVerticle {
 
     vertx.createHttpServer()
         .requestHandler(router::accept)
-        .listen(config().getInteger("port"), v -> {
-          publishService(future, "C");
-        });
+        .listen(config().getInteger("port"));
   }
 
   @Override
-  public void stop(Future<Void> future) throws Exception {
+  public void stop() throws Exception {
     if (client != null) {
       client.close();
-    }
-    if (record != null) {
-      discovery.unpublish(record.getRegistration(), ar -> future.complete());
     }
   }
 
@@ -107,22 +100,5 @@ public class C extends AbstractVerticle {
         .end(new JsonObject()
             .put("D", "No service available (fallback)")
             .put("C", "Olá " + param).encodePrettily());
-  }
-
-  private void publishService(Future future, String name) {
-    if (config().getBoolean("publish-service", true)) {
-      discovery.publish(HttpEndpoint.createRecord(name, "localhost", config().getInteger("port"), "/"),
-          published -> {
-            if (published.succeeded()) {
-              this.record = published.result();
-              LOGGER.info(name + " has been published");
-              future.complete();
-            } else {
-              future.fail("Cannot publish " + name + ": " + published.cause());
-            }
-          });
-    } else {
-      future.complete();
-    }
   }
 }
