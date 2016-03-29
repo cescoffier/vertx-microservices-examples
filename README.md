@@ -73,7 +73,7 @@ submit a form that will execute the application:
 If everything is launched, you should get: `{"A":"Hello vert.x","B":"Hola vert.x","C":"No service available (no 
 record)","D":"Aloha vert.x"}`.
 
-No shutdown one of the application (B, C or D), by hitting `CTRL+C` in the right terminal. Re-submit the form. You 
+Now shutdown one of the application (B, C or D), by hitting `CTRL+C` in the right terminal. Re-submit the form. You 
 should get: `{"A":"Hello vert.x","B":"Hola vert.x","C":"No service available (no record)","D":"Aloha vert.x"}` or 
 something similar.
  
@@ -128,7 +128,7 @@ submit a form that will execute the application:
 
 If everything is launched, you should get: `{"D":"Aloha vert.x","C":"Olá vert.x","B":"Hola vert.x","A":"Hello vert.x"}`.
 
-No shutdown one of the application (B, C or D), by hitting `CTRL+C` in the right terminal. Re-submit the form. You 
+Now shutdown one of the application (B, C or D), by hitting `CTRL+C` in the right terminal. Re-submit the form. You 
 should get: `{"C":"No service available (fallback)","B":"Hola vert.x","A":"Hello vert.x"}` or 
 something similar.
  
