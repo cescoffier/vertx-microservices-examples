@@ -5,7 +5,7 @@ import io.vertx.ext.discovery.DiscoveryService;
 import io.vertx.ext.discovery.kubernetes.KubernetesDiscoveryBridge;
 
 /**
- * @author <a href="http://escoffier.me">Clement Escoffier</a>
+ * This verticle configure the Vert.x discovery to import services from Kubernetes.
  */
 public class OpenshiftVerticle extends AbstractVerticle {
 
