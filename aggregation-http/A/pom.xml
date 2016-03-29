@@ -13,16 +13,8 @@
   <artifactId>aggregation-http-a</artifactId>
 
   <properties>
-    <main.verticle>io.vertx.microservices.A</main.verticle>
+    <main.verticle>io.vertx.microservices.MainVerticle</main.verticle>
   </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-discovery-bridge-kubernetes</artifactId>
-      <version>${vertx.version}</version>
-    </dependency>
-  </dependencies>
 
   <build>
     <plugins>

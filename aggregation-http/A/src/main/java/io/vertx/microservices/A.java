@@ -9,7 +9,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.circuitbreaker.CircuitBreaker;
 import io.vertx.ext.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.kubernetes.KubernetesDiscoveryBridge;
 import io.vertx.ext.discovery.rest.DiscoveryRestEndpoint;
 import io.vertx.ext.discovery.types.HttpEndpoint;
 import io.vertx.ext.web.Router;
@@ -26,10 +25,8 @@ public class A extends AbstractVerticle {
   public void start() throws Exception {
     Router router = Router.router(vertx);
     discovery = DiscoveryService.create(vertx);
-    if (config().getBoolean("openshift", false)) {
-      discovery = DiscoveryService.create(vertx).registerDiscoveryBridge(new KubernetesDiscoveryBridge(), config());
-      DiscoveryRestEndpoint.create(router, discovery);
-    }
+    DiscoveryRestEndpoint.create(router, discovery);
+
     CircuitBreakerOptions options = new CircuitBreakerOptions()
         .setMaxFailures(2)
         .setTimeoutInMs(2000)

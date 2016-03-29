@@ -13,7 +13,7 @@
   <artifactId>aggregation-http-d</artifactId>
 
   <properties>
-    <main.verticle>io.vertx.microservices.D</main.verticle>
+    <main.verticle>io.vertx.microservices.MainVerticle</main.verticle>
   </properties>
 
   <build>

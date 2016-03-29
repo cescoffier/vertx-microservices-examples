@@ -14,6 +14,14 @@
 
   <packaging>pom</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-discovery-bridge-kubernetes</artifactId>
+      <version>${vertx.version}</version>
+    </dependency>
+  </dependencies>
+
   <modules>
     <module>A</module>
     <module>B</module>

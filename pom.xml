@@ -104,11 +104,11 @@
                         <arg>java</arg>
                         <arg>-jar</arg>
                         <arg>${project.artifactId}-${project.version}-fat.jar</arg>
-                        <arg>-cluster</arg>
+                        <!--<arg>-cluster</arg>-->
                         <arg>-conf</arg>
                         <arg>config.json</arg>
-                        <arg>-cp</arg>
-                        <arg>.</arg>
+                        <!--<arg>-cp</arg>-->
+                        <!--<arg>.</arg>-->
                       </exec>
                     </entryPoint>
                     <runCmds>

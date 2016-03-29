@@ -1,4 +1,4 @@
 {
-  "publish-service" : false,
+  "openshift" : true,
   "port" : 8080
 }
