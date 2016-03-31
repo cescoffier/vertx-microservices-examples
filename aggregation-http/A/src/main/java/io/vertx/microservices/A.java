@@ -14,6 +14,9 @@ import io.vertx.ext.discovery.types.HttpEndpoint;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.PermittedOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 public class A extends AbstractVerticle {
 
@@ -32,6 +35,7 @@ public class A extends AbstractVerticle {
         .setTimeoutInMs(2000)
         .setResetTimeoutInMs(5000)
         .setFallbackOnFailure(true);
+
     circuitB = CircuitBreaker.create("B", vertx, options).openHandler(v -> {
       if (clientB != null) {
         clientB.close();
@@ -55,6 +59,7 @@ public class A extends AbstractVerticle {
 
     router.route("/assets/*").handler(StaticHandler.create("assets"));
     router.get("/A").handler(this::hello);
+    setupSockJsBridge(router);
 
     vertx.createHttpServer()
         .requestHandler(router::accept)
@@ -126,22 +131,35 @@ public class A extends AbstractVerticle {
   }
 
   private void invoke(String name, HttpClient client, CircuitBreaker circuit, String param, Future<String> future) {
-    if (client == null) {
-      future.complete("No service available (no record)");
-    } else {
-      circuit.executeAsynchronousCodeWithFallback(
-          circuitFuture -> {
+    circuit.executeAsynchronousCodeWithFallback(
+        circuitFuture -> {
+          if (client == null) {
+            circuitFuture.fail("No service available");
+          } else {
             client.get("/?name=" + param, response -> {
               response.bodyHandler(buffer -> {
                 future.complete(buffer.toJsonObject().getString(name));
                 circuitFuture.complete();
               });
-            })
-                .exceptionHandler(circuitFuture::fail)
-                .end();
-          },
-          v -> future.complete("No service available (fallback)")
-      );
-    }
+            }).exceptionHandler(circuitFuture::fail)
+              .end();
+          }
+        },
+        v -> {
+          if (!future.isComplete()) future.complete("No service available (fallback)");
+          // the future has already been completed, a failure or timeout.
+        }
+    );
+  }
+
+  private void setupSockJsBridge(Router router) {
+    SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
+    BridgeOptions options = new BridgeOptions()
+        .addOutboundPermitted(
+            new PermittedOptions().setAddress("vertx.circuit-breaker"))
+        .addInboundPermitted(
+            new PermittedOptions().setAddress("vertx.circuit-breaker"));
+    sockJSHandler.bridge(options);
+    router.route("/eventbus/*").handler(sockJSHandler);
   }
 }
