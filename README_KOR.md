@@ -5,7 +5,8 @@
 1. aggregation
 2. 파이프라인
 
-만약에 Openshift Origin과 Kubernetes discovery 위에서 예제 서비스를 구동한다면, vert.x discovery, circuit breaker를 사용하게 됩니다.
+이 예제는 vert.x discovery와 circuit breaker를 사용합니다.
+그리고 만약 Openshift Origin 위에서 구동한다면 Kubernetes discovery를 사용합니다.
 
 
 aggreagation 패턴에서 마이크로서비스는 다른 마이크로서비스로부터 온 결과들을 모읍니다. 예를 들어 A는 B, C, D를 호출하고 클라이언트에게 합쳐진 결과를 보냅니다.
@@ -13,12 +14,12 @@ aggreagation 패턴에서 마이크로서비스는 다른 마이크로서비스�
 파이프라인 패턴에서는 마이크로서비스가 다른 서비스를 호출하고, 그 서비스가 또 다른 서비스를 호출합니다. 예를 들어 A가 B를 호출하고, B가 C를 호출하고,
 C가 D를 호출하고 나면, 클라이언트는 그 결과를 전부 얻습니다.  
 
-이번 예제에서는 마이크로서비스가 HTTP 프로토콜을 이용해 통신을 합니다. 그러나 이것은 필수사항이 아니고, 비동기 서비스 프록시, 이벤트 , SOAP와 같은
-어떠한 프로토콜을 사용해도 상관이 없습니다.
+이번 예제에서는 마이크로서비스가 HTTP 프로토콜을 이용해 서로 통신을 합니다. 그러나 HTTP뿐만 아니라, 비동기 서비스 프록시, 이벤트 , SOAP와 같은
+다른 어떠한 프로토콜을 사용해도 상관이 없습니다.
 
 ## 로컬에서 데모를 실행해봅시다.
 
-우선, 당신은 다음과 같은 명령어로 프로젝트를 빌드해야 합니다.:
+우선, 다음과 같은 명령어로 프로젝트를 빌드해야 합니다.:
 
 ```
 mvn clean install
@@ -28,7 +29,7 @@ mvn clean install
 
 ### Aggregation 예제
 
-우선 `aggregation-http` 디렉토리로 이동하세요, 그리고 4개의 터미널을 여세요.(각각의 터미널이 한개의 마이크로 서비스에 해당합니다.)
+우선 `aggregation-http` 디렉토리로 이동하세요, 그리고 4개의 터미널을 여세요.(각각의 터미널은 한개의 마이크로 서비스에 해당합니다.)
 
 ```
 cd aggregation-http
@@ -58,11 +59,11 @@ java -Djava.net.preferIPv4Stack=true -jar target/aggregation-http-D-1.0-SNAPSHOT
 
 위의 명령어들을 분석해봅시다:
 
-* 각 명령어의 첫번째 부분은 몇몇 문제점 때문에 IPv4 주소를 사용하는 것을 의미합니다.
-* 각 명령어의 두번째 부분은 메이븐을 통해 만들어진 _fat jar_ 을 이용해서 마이크로서비스(vert.x로 구현된 서비스)를 실행시킵니다.
+* 각 명령어의 첫번째 부분은 몇가지 네트워크 이슈를 피하기 위해 IPv4 주소를 사용하는 것을 의미합니다.
+* 각 명령어의 두번째 부분은 메이븐을 통해 만들어진 _fat jar_ 을 이용해서 마이크로서비스(vert.x로 구현된 서비스)를 실행시키는 것 입니다.
 * 각 명령어의 세번째 부분은 vert.x 어플리케이션을 클러스터 모드로 실행시키고, 약간의 설정 정보를 가져옵니다.
 
-클러스터는 Hazelcast를 사용하고 `../etc/cluster.xml` 파일에 설정정보가 있습니다. 기본적으로 `127.0.0.1` 주소를 사용합니다.
+클러스터는 Hazelcast를 사용하고 `../etc/cluster.xml` 파일에 설정정보가 있습니다. 그리고 기본적으로 `127.0.0.1` 주소를 사용합니다.
 
 일단 실행되고 나면 브라우저를 열어서 `http://localhost:8080/assets/index.html` 로 접속하세요. 당신은 아마 폼을 제출하는 웹페이지를 보게 될 것입니다.
 그리고 이 폼은 우리의 어플리케이션을 실행시킬 것 입니다.
@@ -72,10 +73,10 @@ java -Djava.net.preferIPv4Stack=true -jar target/aggregation-http-D-1.0-SNAPSHOT
 모든 것이 제대로 실행되면 당신은 다음과 같은 데이터를 얻게 됩니다: `{"A":"Hello vert.x","B":"Hola vert.x","C":"No service available (no
 record)","D":"Aloha vert.x"}`.
 
-터미널에서 `CTRL+C`를 입력하여 B,C,D 중 하나의 서비스를 셧다운 시켜봅시다. 폼을 다시 제출해보세요.
-당신은 아마 다음과 같은 데이터를 얻게 될 것입니다. `{"A":"Hello vert.x","B":"Hola vert.x","C":"No service available (no record)","D":"Aloha vert.x"}` 어떤 서비스를 종료시켰는지에 따라 조금 달라질 수는 있지만요.
+터미널에서 `CTRL+C`를 입력하여 B,C,D 중 하나의 서비스를 셧다운 시켜봅시다. 그리고 폼을 다시 제출해보세요.
+당신은 아마 다음과 같은 데이터를 얻게 될 것입니다. `{"A":"Hello vert.x","B":"Hola vert.x","C":"No service available (no record)","D":"Aloha vert.x"}` 이 결과는 어떤 서비스를 종료시켰는지에 따라 조금 달라질 수 있습니다.
 
-마이크로서비스를 종료시키고 나면, 더 이상 요청에 응답하지 않습니다. circuit breaker가 에러를 가로챌 것이고, fallback 함수를 실행시킬 것입니다.(역주: fallback은 어떤 것이 고장이나 작동불능일 때 대체하는 것을 말합니다.) 만약 당신이 서비스를 재실행하면, 출력은 아마 _정상_ 으로 돌아갈 것 입니다. 이것은 circuit breaker가 주기적으로 상태를 초기하고 _정상_ 으로 돌아갔는지 확인하기 때문입니다.
+마이크로서비스를 종료시키고 나면, 더 이상 요청에 응답하지 않습니다. circuit breaker가 에러를 가로챌 것이고, fallback 함수를 실행시킬 것입니다.(역주: fallback은 어떤 것이 고장이나 작동불능일 때 대체하는 것을 말합니다.) 만약 서비스를 재실행하면, 출력은 아마 _정상_ 으로 돌아갈 것 입니다. 이것은 circuit breaker가 주기적으로 상태를 초기하고 _정상_ 으로 돌아갔는지 확인하기 때문입니다.
 
 
 ### 파이프라인 예제
@@ -110,8 +111,8 @@ java -Djava.net.preferIPv4Stack=true -jar target/pipeline-http-D-1.0-SNAPSHOT-fa
 
 위의 명령어를 분석해봅시다:
 
-* 각 명령어의 첫번째 부분은 몇몇 문제점 때문에 IPv4 주소를 사용하는 것을 의미합니다.
-* 각 명령어의 두번째 부분은 메이븐을 통해 만들어진 _fat jar_ 을 이용해서 마이크로서비스(vert.x로 구현된 서비스)를 실행시킵니다.
+* 각 명령어의 첫번째 부분은 몇가지 네트워크 이슈를 피하기 위해 IPv4 주소를 사용하는 것을 의미합니다.
+* 각 명령어의 두번째 부분은 메이븐을 통해 만들어진 _fat jar_ 을 이용해서 마이크로서비스(vert.x로 구현된 서비스)를 실행시키는 것 입니다.
 * 각 명령어의 세번째 부분은 vert.x 어플리케이션을 클러스터 모드로 실행시키고, 약간의 설정 정보를 가져옵니다.
 
 클러스터는 Hazelcast를 사용하고 `../etc/cluster.xml` 파일에 설정정보가 있습니다. 기본적으로 `127.0.0.1` 주소를 사용합니다.
@@ -124,7 +125,7 @@ java -Djava.net.preferIPv4Stack=true -jar target/pipeline-http-D-1.0-SNAPSHOT-fa
 
 모든 것이 제대로 실행되면 다음과 같은 데이터를 얻게 됩니다.: `{"D":"Aloha vert.x","C":"Olá vert.x","B":"Hola vert.x","A":"Hello vert.x"}`.
 
-B,C,D 중 아무 서비스나 터미널에서 `CTRL+C`를 입력해서 종료시켜봅시다. 다시 폼을 제출하면 다음과 같은 데이터를 얻게 됩니다: `{"C":"No service available (fallback)","B":"Hola vert.x","A":"Hello vert.x"}` 어떤 서비스를 종료시켰는지에 따라 조금 달라질 수는 있지만요.
+B,C,D 중 아무 서비스나 터미널에서 `CTRL+C`를 입력해서 종료시켜봅시다. 다시 폼을 제출하면 다음과 같은 데이터를 얻게 됩니다: `{"C":"No service available (fallback)","B":"Hola vert.x","A":"Hello vert.x"}` 이 결과는 어떤 서비스를 종료시켰는지에 따라 조금 달라질 수 있습니다.
 
 마이크로서비스를 종료시키고 나면, 더 이상 요청에 응답하지 않습니다. circuit breaker가 에러를 가로챌 것이고, fallback 함수를 실행시킬 것입니다.(역주: fallback은 어떤 것이 고장이나 작동불능일 때 대체하는 것을 말합니다.) 만약 당신이 서비스를 재실행하면, 출력은 아마 _정상_ 으로 돌아갈 것 입니다. 이것은 circuit breaker가 주기적으로 상태를 초기하고 _정상_ 으로 돌아갔는지 확인하기 때문입니다.         
 
@@ -256,7 +257,7 @@ mvn clean package docker:build fabric8:json fabric8:apply -Popenshift
 
 ### 모든 서비스를 한번에 셧다운 시키는 방법
 
-Openshift 와 배포된 pods들을 종료시키기 위해선 다음의 명령어를 입력하세요:
+Openshift 와 배포된 pod들을 종료시키기 위해선 다음의 명령어를 입력하세요:
 
 ```
 # On bash
