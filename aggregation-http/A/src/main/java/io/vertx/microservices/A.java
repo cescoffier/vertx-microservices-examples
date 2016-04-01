@@ -32,8 +32,8 @@ public class A extends AbstractVerticle {
 
     CircuitBreakerOptions options = new CircuitBreakerOptions()
         .setMaxFailures(2)
-        .setTimeoutInMs(2000)
-        .setResetTimeoutInMs(5000)
+        .setTimeout(2000)
+        .setResetTimeout(5000)
         .setFallbackOnFailure(true);
 
     circuitB = CircuitBreaker.create("B", vertx, options).openHandler(v -> {
@@ -131,7 +131,7 @@ public class A extends AbstractVerticle {
   }
 
   private void invoke(String name, HttpClient client, CircuitBreaker circuit, String param, Future<String> future) {
-    circuit.executeAsynchronousCodeWithFallback(
+    circuit.executeWithFallback(
         circuitFuture -> {
           if (client == null) {
             circuitFuture.fail("No service available");

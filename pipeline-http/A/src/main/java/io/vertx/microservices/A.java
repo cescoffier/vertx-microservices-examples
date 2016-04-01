@@ -29,8 +29,8 @@ public class A extends AbstractVerticle {
     circuit = CircuitBreaker.create("A", vertx,
         new CircuitBreakerOptions()
             .setMaxFailures(1)
-            .setTimeoutInMs(3000)
-            .setResetTimeoutInMs(5000)
+            .setTimeout(3000)
+            .setResetTimeout(5000)
             .setFallbackOnFailure(true))
         .halfOpenHandler(v -> {
           if (client != null) {
@@ -58,7 +58,7 @@ public class A extends AbstractVerticle {
       // No record - fallback
       fallback(context, param);
     } else {
-      circuit.executeAsynchronousCodeWithFallback(
+      circuit.executeWithFallback(
           future ->
               client.get("/?name=" + param, response -> {
                 response.bodyHandler(buffer -> buildResponse(context, param, buffer));
