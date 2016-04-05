@@ -54,6 +54,11 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-hazelcast</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.noctarius.discovery</groupId>
+      <artifactId>hazelcast-kubernetes-discovery</artifactId>
+      <version>0.9.2</version>
+    </dependency>
 
   </dependencies>
 
@@ -104,11 +109,11 @@
                         <arg>java</arg>
                         <arg>-jar</arg>
                         <arg>${project.artifactId}-${project.version}-fat.jar</arg>
-                        <!--<arg>-cluster</arg>-->
+                        <arg>-cluster</arg>
                         <arg>-conf</arg>
                         <arg>config.json</arg>
-                        <!--<arg>-cp</arg>-->
-                        <!--<arg>.</arg>-->
+                        <arg>-cp</arg>
+                        <arg>.</arg>
                       </exec>
                     </entryPoint>
                     <runCmds>

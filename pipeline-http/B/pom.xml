@@ -59,6 +59,7 @@
         <fabric8.service.b.containerPort>8080</fabric8.service.b.containerPort>
         <fabric8.service.b.type>LoadBalancer</fabric8.service.b.type>
         <fabric8.label.service-type>http-endpoint</fabric8.label.service-type>
+        <fabric8.label.vertx-cluster>true</fabric8.label.vertx-cluster>
       </properties>
     </profile>
   </profiles>

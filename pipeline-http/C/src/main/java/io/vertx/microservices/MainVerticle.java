@@ -26,7 +26,6 @@ public class MainVerticle extends AbstractVerticle {
       discovery = DiscoveryService.create(vertx);
       publishService(future, discovery, "C");
     } else {
-      vertx.deployVerticle(OpenshiftVerticle.class.getName(), options);
       future.complete();
     }
   }
