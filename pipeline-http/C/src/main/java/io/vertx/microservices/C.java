@@ -72,7 +72,10 @@ public class C extends AbstractVerticle {
                   .exceptionHandler(future::fail)
                   .end()
           ,
-          v -> fallback(context, param)
+          v -> {
+            fallback(context, param);
+            return null;
+          }
       );
     }
   }
@@ -81,7 +84,7 @@ public class C extends AbstractVerticle {
     if (client != null) {
       resultHandler.handle(client);
     } else {
-      HttpEndpoint.get(vertx, discovery, new JsonObject().put("name", "D"), ar -> {
+      HttpEndpoint.getClient(discovery, new JsonObject().put("name", "D"), ar -> {
         client = ar.result();
         resultHandler.handle(client);
       });

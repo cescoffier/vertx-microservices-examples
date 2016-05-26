@@ -72,7 +72,10 @@ public class B extends AbstractVerticle {
                   .exceptionHandler(future::fail)
                   .end()
           ,
-          v -> fallback(context, param)
+          v -> {
+            fallback(context, param);
+            return null;
+          }
       );
     }
   }
@@ -81,7 +84,7 @@ public class B extends AbstractVerticle {
     if (client != null) {
       resultHandler.handle(client);
     } else {
-      HttpEndpoint.get(vertx, discovery, new JsonObject().put("name", "C"), ar -> {
+      HttpEndpoint.getClient(discovery, new JsonObject().put("name", "C"), ar -> {
         if (ar.failed()) {
           LOGGER.info("Service lookup failure", ar.cause());
         }
