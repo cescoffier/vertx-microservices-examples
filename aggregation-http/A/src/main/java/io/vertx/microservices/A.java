@@ -101,7 +101,7 @@ public class A extends AbstractVerticle {
     if (clientB != null) {
       next.handle(clientB);
     } else {
-      HttpEndpoint.get(vertx, discovery, new JsonObject().put("name", "B"), ar -> {
+      HttpEndpoint.getClient(discovery, new JsonObject().put("name", "B"), ar -> {
         clientB = ar.result();
         next.handle(clientB);
       });
@@ -112,7 +112,7 @@ public class A extends AbstractVerticle {
     if (clientD != null) {
       next.handle(clientD);
     } else {
-      HttpEndpoint.get(vertx, discovery, new JsonObject().put("name", "D"), ar -> {
+      HttpEndpoint.getClient(discovery, new JsonObject().put("name", "D"), ar -> {
         clientD = ar.result();
         next.handle(clientD);
       });
@@ -123,7 +123,7 @@ public class A extends AbstractVerticle {
     if (clientC != null) {
       next.handle(clientC);
     } else {
-      HttpEndpoint.get(vertx, discovery, new JsonObject().put("name", "C"), ar -> {
+      HttpEndpoint.getClient(discovery, new JsonObject().put("name", "C"), ar -> {
         clientC = ar.result();
         next.handle(clientC);
       });
@@ -146,8 +146,9 @@ public class A extends AbstractVerticle {
           }
         },
         v -> {
-          if (!future.isComplete()) future.complete("No service available (fallback)");
           // the future has already been completed, a failure or timeout.
+          if (!future.isComplete()) future.complete("No service available (fallback)");
+          return null;
         }
     );
   }
