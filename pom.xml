@@ -11,7 +11,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <vertx.version>3.3.0-SNAPSHOT</vertx.version>
+    <vertx.version>3.3.2</vertx.version>
   </properties>
 
   <modules>
@@ -47,7 +47,7 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-discovery-service</artifactId>
+      <artifactId>vertx-service-discovery</artifactId>
       <version>${vertx.version}</version>
     </dependency>
     <dependency>
@@ -155,15 +155,4 @@
       </build>
     </profile>
   </profiles>
-
-  <repositories>
-    <repository>
-      <id>oss.snapshot</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
 </project>

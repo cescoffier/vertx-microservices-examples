@@ -6,11 +6,11 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.circuitbreaker.CircuitBreaker;
-import io.vertx.ext.circuitbreaker.CircuitBreakerOptions;
-import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.rest.DiscoveryRestEndpoint;
-import io.vertx.ext.discovery.types.HttpEndpoint;
+import io.vertx.circuitbreaker.CircuitBreaker;
+import io.vertx.circuitbreaker.CircuitBreakerOptions;
+import io.vertx.servicediscovery.ServiceDiscovery;
+import io.vertx.servicediscovery.rest.ServiceDiscoveryRestEndpoint;
+import io.vertx.servicediscovery.types.HttpEndpoint;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -20,15 +20,15 @@ import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 public class A extends AbstractVerticle {
 
-  private DiscoveryService discovery;
+  private ServiceDiscovery discovery;
   private CircuitBreaker circuitB, circuitC, circuitD;
   private HttpClient clientB, clientC, clientD;
 
   @Override
   public void start() throws Exception {
     Router router = Router.router(vertx);
-    discovery = DiscoveryService.create(vertx);
-    DiscoveryRestEndpoint.create(router, discovery);
+    discovery = ServiceDiscovery.create(vertx);
+    ServiceDiscoveryRestEndpoint.create(router, discovery);
 
     CircuitBreakerOptions options = new CircuitBreakerOptions()
         .setMaxFailures(2)

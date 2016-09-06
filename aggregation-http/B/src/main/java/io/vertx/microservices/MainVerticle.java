@@ -5,9 +5,9 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.Record;
-import io.vertx.ext.discovery.types.HttpEndpoint;
+import io.vertx.servicediscovery.ServiceDiscovery;
+import io.vertx.servicediscovery.Record;
+import io.vertx.servicediscovery.types.HttpEndpoint;
 
 
 public class MainVerticle extends AbstractVerticle {
@@ -15,14 +15,14 @@ public class MainVerticle extends AbstractVerticle {
   private static final Logger LOGGER = LoggerFactory.getLogger(MainVerticle.class.getName());
 
   private Record record;
-  private DiscoveryService discovery;
+  private  ServiceDiscovery discovery;
 
   @Override
   public void start(Future future) throws Exception {
     DeploymentOptions options = new DeploymentOptions().setConfig(config());
     vertx.deployVerticle(B.class.getName(), options);
     if (!config().getBoolean("openshift", false)) {
-      discovery = DiscoveryService.create(vertx);
+      discovery = ServiceDiscovery.create(vertx);
       publishService(future, discovery, "B");
     } else {
       future.complete();
@@ -41,7 +41,7 @@ public class MainVerticle extends AbstractVerticle {
     }
   }
 
-  private void publishService(Future future, DiscoveryService discovery, String name) {
+  private void publishService(Future future, ServiceDiscovery discovery, String name) {
     discovery.publish(HttpEndpoint.createRecord(name, "localhost", config().getInteger("port"), "/"),
         published -> {
           if (published.succeeded()) {
