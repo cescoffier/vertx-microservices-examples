@@ -8,24 +8,24 @@ import io.vertx.core.http.HttpClient;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.circuitbreaker.CircuitBreaker;
-import io.vertx.ext.circuitbreaker.CircuitBreakerOptions;
-import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.types.HttpEndpoint;
+import io.vertx.circuitbreaker.CircuitBreaker;
+import io.vertx.circuitbreaker.CircuitBreakerOptions;
+import io.vertx.servicediscovery.ServiceDiscovery;
+import io.vertx.servicediscovery.types.HttpEndpoint;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 public class B extends AbstractVerticle {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(B.class);
-  private DiscoveryService discovery;
+  private ServiceDiscovery discovery;
   private CircuitBreaker circuit;
   private HttpClient client;
 
   @Override
   public void start() throws Exception {
     Router router = Router.router(vertx);
-    discovery = DiscoveryService.create(vertx);
+    discovery = ServiceDiscovery.create(vertx);
     circuit = CircuitBreaker.create("B", vertx,
         new CircuitBreakerOptions()
             .setMaxFailures(1)

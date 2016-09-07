@@ -3,11 +3,6 @@ package io.vertx.microservices;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.discovery.DiscoveryService;
-import io.vertx.ext.discovery.Record;
-import io.vertx.ext.discovery.types.HttpEndpoint;
 import io.vertx.ext.web.Router;
 
 public class C extends AbstractVerticle {
