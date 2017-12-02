@@ -1,85 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Circuit Breakers</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <div class="row">
-        <div class="head col-md-6">
-            <h1>Circuit Breakers</h1>
+        <div class="row">
+            <div class="head col-md-6">
+                <h1>Circuit Breakers</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Failures</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Failures</th>
-                </tr>
-                </thead>
-                <tbody id="content">
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<script src="http://code.jquery.com/jquery-2.2.1.min.js"
-        integrity="sha256-fGw04WZFsjkZsJt5Dlv8Aclo2fF/hlilqNSq/QtfJMY="
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
-<script src='libs/vertx-eventbus.js'></script>
+    <script src="http://code.jquery.com/jquery-2.2.1.min.js" integrity="" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/0.3.4/sockjs.min.js"></script>
+    <script src='libs/vertx-eventbus.js'></script>
 
 
-<script>
-    var eb = new EventBus('/eventbus');
+    <script>
+        var eb = new EventBus('/eventbus');
 
-    eb.onopen = function () {
-        console.log("SockJS bridge opened");
-        eb.registerHandler('vertx.circuit-breaker', function (error, message) {
-            console.log('received an update: ' + JSON.stringify(message));
-            var name = message.body.name;
-            var row = $("#" + name);
-            if (row.size() == 0) {
-                insertNewCircuitBreaker(message.body);
-            } else {
-                updateCircuitBreaker(row, message.body);
-            }
-        });
-    };
+        eb.onopen = function() {
+            console.log("SockJS bridge opened");
+            eb.registerHandler('vertx.circuit-breaker', function(error, message) {
+                console.log('received an update: ' + JSON.stringify(message));
+                var name = message.body.name;
+                var row = $("#" + name);
+                if (row.size() == 0) {
+                    insertNewCircuitBreaker(message.body);
+                } else {
+                    updateCircuitBreaker(row, message.body);
+                }
+            });
+        };
 
-    function insertNewCircuitBreaker(circuit) {
-        var row = $("<tr id='" + circuit.name + "'><td>" + circuit.name + "</td><td class='state'>" +
+        function insertNewCircuitBreaker(circuit) {
+            var row = $("<tr id='" + circuit.name + "'><td>" + circuit.name + "</td><td class='state'>" +
                 insertState(circuit.state) + "</td><td class='failures'>" + circuit.failures + "</td></tr>");
-        $("#content").append(row);
-    }
-
-    function updateCircuitBreaker(row, circuit) {
-        $(row).find(".state").html(insertState(circuit.state));
-        $(row).find(".failures").html(circuit.failures);
-    }
-
-    function insertState(state) {
-        switch (state) {
-            case "CLOSED" :
-                return "<span class='label label-success'>CLOSED</span>";
-            case "OPEN" :
-                return "<span class='label label-danger'>OPEN</span>";
-            case "HALF_OPEN" :
-                return "<span class='label label-warning'>HALF OPEN</span>";
+            $("#content").append(row);
         }
-    }
-</script>
+
+        function updateCircuitBreaker(row, circuit) {
+            $(row).find(".state").html(insertState(circuit.state));
+            $(row).find(".failures").html(circuit.failures);
+        }
+
+        function insertState(state) {
+            switch (state) {
+                case "CLOSED":
+                    return "<span class='label label-success'>CLOSED</span>";
+                case "OPEN":
+                    return "<span class='label label-danger'>OPEN</span>";
+                case "HALF_OPEN":
+                    return "<span class='label label-warning'>HALF OPEN</span>";
+            }
+        }
+    </script>
 
 </body>
+
 </html>

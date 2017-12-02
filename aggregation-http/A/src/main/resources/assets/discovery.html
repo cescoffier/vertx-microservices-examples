@@ -1,87 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Discovery</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <div class="row">
-        <div class="head col-md-6">
-            <h1>Services</h1>
+        <div class="row">
+            <div class="head col-md-6">
+                <h1>Services</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Registration Id</th>
+                            <th>Location</th>
+                            <th>Metadata</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content">
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Registration Id</th>
-                    <th>Location</th>
-                    <th>Metadata</th>
-                </tr>
-                </thead>
-                <tbody id="content">
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<script src="http://code.jquery.com/jquery-2.2.1.min.js"
-        integrity="sha256-fGw04WZFsjkZsJt5Dlv8Aclo2fF/hlilqNSq/QtfJMY="
-        crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.2.1.min.js" integrity="" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 
-<script>
-    var discovery = "/discovery";
-    $.get(discovery, {}, function (services) {
-        console.log("Retrieved", services);
-        $.each(services, function(i, svc) {
-            createRowFor(svc);
+    <script>
+        var discovery = "/discovery";
+        $.get(discovery, {}, function(services) {
+            console.log("Retrieved", services);
+            $.each(services, function(i, svc) {
+                createRowFor(svc);
+            });
         });
-    });
 
-    function createRowFor(svc) {
-        var row = $("<tr id='" + svc.name + "'>" +
+        function createRowFor(svc) {
+            var row = $("<tr id='" + svc.name + "'>" +
                 "<td>" + svc.name + "</td>" +
                 "<td class='status'>" + insertStatus(svc.status) + "</td>" +
                 "<td class='registration'>" + svc.registration + "</td>" +
                 "<td class='location'>" + insertMetadata(svc.location) + "</td>" +
                 "<td class='location'>" + insertMetadata(svc.metadata) + "</td>" +
                 "</tr>");
-        $("#content").append(row);
-    }
-
-    function insertStatus(status) {
-        switch (status) {
-            case "UP" :
-                return "<span class='label label-success'>UP</span>";
-            case "DOWN" :
-                return "<span class='label label-danger'>DOWN</span>";
-            case "OUT_OF_SERVICE" :
-                return "<span class='label label-warning'>OUT OF SERVICE</span>";
+            $("#content").append(row);
         }
-    }
 
-    function insertMetadata(metadata) {
-        var list = "<ul>";
-        $.each(metadata, function(key,value){
-            list += "<li>" + key + " = " + value + "</li>";
-        });
-        list += "</ul>";
-        return list
-    }
+        function insertStatus(status) {
+            switch (status) {
+                case "UP":
+                    return "<span class='label label-success'>UP</span>";
+                case "DOWN":
+                    return "<span class='label label-danger'>DOWN</span>";
+                case "OUT_OF_SERVICE":
+                    return "<span class='label label-warning'>OUT OF SERVICE</span>";
+            }
+        }
 
-</script>
+        function insertMetadata(metadata) {
+            var list = "<ul>";
+            $.each(metadata, function(key, value) {
+                list += "<li>" + key + " = " + value + "</li>";
+            });
+            list += "</ul>";
+            return list
+        }
+    </script>
 
 </body>
+
 </html>

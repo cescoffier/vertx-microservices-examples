@@ -1,82 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Micro-Service Demo - ABCD - Browser Aggregation - HTTP</title>
 
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 
     <style>
         body {
             padding-top: 50px;
         }
-
+        
         .head {
             padding: 40px 15px;
             text-align: center;
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <div class="row">
-        <div class="head col-md-6">
-            <h1>Vert.x Micro-Services Sample - ABCD - Aggregation - HTTP</h1>
-            <p class="lead">In this sample, this page is consuming 1 service using Ajax and print the result below. This service (A) calls 3 services (B, C and D) and builds an aggregated response.
-                Enter a parameter in the text box and click on invoke. You can have a look to the circuit breakers
-                using <a href="/assets/circuits.html">the circuit breaker status page</a>. The available services
-                are listed on <a href="/assets/discovery.html">the discovery page</a>.</p>
-        </div>
-    </div>
-
-    <div class="row">
-        <form class="form-inline col-md-12">
-            <div class="form-group">
-                <label for="name">Name: </label>
-                <input type="text" class="form-control" id="name" placeholder="vert.x">
+        <div class="row">
+            <div class="head col-md-6">
+                <h1>Vert.x Micro-Services Sample - ABCD - Aggregation - HTTP</h1>
+                <p class="lead">In this sample, this page is consuming 1 service using Ajax and print the result below. This service (A) calls 3 services (B, C and D) and builds an aggregated response. Enter a parameter in the text box and click on invoke. You can have
+                    a look to the circuit breakers using <a href="/assets/circuits.html">the circuit breaker status page</a>. The available services are listed on <a href="/assets/discovery.html">the discovery page</a>.</p>
             </div>
-            <button id="invoke" type="button" class="btn btn-primary">Invoke</button>
-        </form>
+        </div>
+
+        <div class="row">
+            <form class="form-inline col-md-12">
+                <div class="form-group">
+                    <label for="name">Name: </label>
+                    <input type="text" class="form-control" id="name" placeholder="vert.x">
+                </div>
+                <button id="invoke" type="button" class="btn btn-primary">Invoke</button>
+            </form>
+        </div>
+
+        <h2>Result:</h2>
+        <div id="result">
+        </div>
+
     </div>
 
-    <h2>Result:</h2>
-    <div id="result">
-    </div>
+    <script src="http://code.jquery.com/jquery-2.2.1.min.js" integrity="" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-</div>
+    <script>
+        var endpoint_a = "/A";
 
-<script   src="http://code.jquery.com/jquery-2.2.1.min.js"
-          integrity="sha256-fGw04WZFsjkZsJt5Dlv8Aclo2fF/hlilqNSq/QtfJMY="
-          crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-<script>
-    var endpoint_a = "/A";
-
-    function getName() {
-        var val = $("#name").val();
-        if (val === "") {
-            return "vert.x";
-        } else {
-            return val;
+        function getName() {
+            var val = $("#name").val();
+            if (val === "") {
+                return "vert.x";
+            } else {
+                return val;
+            }
         }
-    }
 
-    function invoke_a() {
-        console.log("Invoking A " + endpoint_a);
-        $.get(endpoint_a, {name: getName()}, function (data) {
-            $("#result").append("<p>" + JSON.stringify(data) + "</p>");
+        function invoke_a() {
+            console.log("Invoking A " + endpoint_a);
+            $.get(endpoint_a, {
+                name: getName()
+            }, function(data) {
+                $("#result").append("<p>" + JSON.stringify(data) + "</p>");
+            });
+        }
+
+        $("#invoke").click(function() {
+            invoke_a();
         });
-    }
-
-    $("#invoke").click(function() {
-        invoke_a();
-    });
-
-</script>
+    </script>
 
 </body>
+
 </html>
